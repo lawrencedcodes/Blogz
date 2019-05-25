@@ -1,5 +1,6 @@
 # BLOGZ
-One Paragraph of project description goes here
+Python-based blog written and submitted in partial fulfillment for requirements in LC101 Launch Code Programming Bootcamp.
+Memphis, TN Cohort 1
 
 ### Prerequisites
 Project requires Python, Flask-Env and Mysql database
