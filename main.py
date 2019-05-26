@@ -34,14 +34,25 @@ def require_login():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
+        error = 0
+        username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        if user and user.password == password:
-            session['email'] = email
-            return redirect ('/')
+        user_error = ''
+        pass_error = ''
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            error = error + 1
+            user_error = 'User does not exsist'
+        elif user.password != password:
+            error = error + 1
+            pass_error = 'Invaled Password'
+        if error == 0:
+            if user and user.password == password:
+                session['username'] = username
+                flash("Logged in")
+                return redirect('/new_post')
         else:
-            return '<h1>Error!</h1>'
+            return render_template('login.html', user_error=user_error, pass_error=pass_error)
 
     return render_template('login.html')
 
@@ -70,7 +81,7 @@ def logout():
 @app.route('/', methods=['POST', 'GET'])
 def index():
     post_id = request.args.get('id')
-    title = 'Build a Blog'
+    title = 'Blogz'
     posts = [] 
     if post_id:
         posts = Blog.query.filter_by(id=post_id).all()
