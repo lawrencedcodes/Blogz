@@ -118,5 +118,60 @@ def newpost():
 
         return render_template('post.html', title = title, body=body, posts = posts)
     return render_template('newpost.html', title_error = title_error, text_error = text_error)
+
+
+@app.route('/signup', methods=['POST', 'GET'])
+def new_user():    
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        conf_pass = request.form["confurm_pass"]
+
+        old_user = ''
+        username_error = ''
+        password_error = ''
+        conf_pass_error = ''
+        error = 0
+
+        if len(username) < 3 or len(username) > 20:
+            username_error = 'Not a valid user name'
+            error = error + 1
+
+        for char in username:
+            if char == ' ':
+                username_error = 'Not a valid user name'
+                error = error + 1
+
+        if len(password) < 3 or len(password) > 20:
+            password_error = 'Not a valid password'
+            error = error + 1
+
+        for char in password:
+            if char == ' ':
+                password_error = 'Not a valid user name'
+                error = error + 1
+
+        if password != conf_pass:
+            conf_pass_error = 'Does not match password'
+            error = error + 1
+
+        if error == 0:
+            existing_user = User.query.filter_by(username=username).first()
+            if not existing_user:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/login')
+            else:
+                old_user = 'User already Registerd'
+                return render_template('signup.html', old_user=old_user, username=username)
+        else:
+            return render_template('user_sighnup.html', username=username, 
+            username_error=username_error, password_error=password_error, 
+            conf_pass_error=conf_pass_error)
+
+    return render_template('signup.html')
+
 if __name__ == '__main__':
     app.run()
