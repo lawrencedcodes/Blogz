@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Login</h1>
-
+<a href="/usersignup">Sign Up</a>
 <form action="/login" method="post">
     <table>
         <tbody>
@@ -13,22 +13,20 @@
                 <span class="error">{{usererror}}</span>
             </td>
             </tr>
-
             <tr>
-            <td>
-                <label for="password">Password</label>
-                <input name="password" type="password">
-                <span class="error">{{passerror}}</span>
-            </td>
+                <td>
+                    <label for="password">Password</label>
+                    <input name="password" type="password">
+                    <span class="error">{{passerror}}</span>
+                </td>
             </tr>
         </tbody>
     </table>
-
     <div>
-    <input type="submit" value="Login">
+        <input type="submit" value="Login">
     </div>
     <div>
-    <span class="error">{{error}}</span>
+        <span class="error">{{error}}</span>
     </div>
 </form>
 

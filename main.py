@@ -49,7 +49,7 @@ def singlepost():
     return render_template('singlepost.html', post=post)#, users=users)
 
 @app.route('/all_posts', methods=['POST', 'GET'])
-def all_posts():
+def allposts():
 
     posts = Post.query.all()
     #user = User.query.all()
@@ -97,7 +97,7 @@ def logout():
 
 
 @app.route('/new_post', methods=['POST', 'GET'])
-def new_post():
+def newpost():
 
     owner = User.query.filter_by(username=session['username']).first()
 
@@ -138,10 +138,10 @@ def new_post():
 
 
 
-@app.route('/users_posts')
-def users_posts():
+@app.route('/usersposts')
+def usersposts():
        
-    user_id = request.args.get('userid')
+    userid = request.args.get('userid')
     user = User.query.get(userid)
     post = Post.query.filter_by(ownerid=userid)
     return render_template('usersposts.html', user=user, posts=post)  
@@ -149,12 +149,12 @@ def users_posts():
 
 
 @app.route('/usersignup', methods=['POST', 'GET'])
-def new_user():    
+def newuser():    
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        confpass = request.form["confirm_pass"]
+        confpass = request.form["confirmpass"]
 
         olduser = ''
         usernameerror = ''
