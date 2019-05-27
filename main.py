@@ -46,19 +46,17 @@ def home():
 @app.route('/singlepost')
 def singlepost():
 
-    #users = User.query.all()
+   
     postid = request.args.get('postid')
     post = Blog.query.get(postid)
-    return render_template('singlepost.html', post=post)#, users=users)
+    return render_template('singlepost.html', post=post)
 
 @app.route('/all_posts', methods=['POST', 'GET'])
 def allposts():
 
     posts = Blog.query.all()
     #user = User.query.all()
-    return render_template('allposts.html', posts=posts)#, user=user)
-
-
+    return render_template('allposts.html', posts=posts)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -89,15 +87,11 @@ def login():
 
     return render_template('login.html')
 
-
-
 @app.route('/logout')
 def logout():
 
     del session['username']
     return redirect('/')
-
-
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
@@ -146,7 +140,7 @@ def usersposts():
        
     userid = request.args.get('userid')
     user = User.query.get(userid)
-    post = Post.query.filter_by(ownerid=userid)
+    post = Blog.query.filter_by(ownerid=userid)
     return render_template('usersposts.html', user=user, posts=post)  
 
 
