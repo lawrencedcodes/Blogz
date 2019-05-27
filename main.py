@@ -27,12 +27,43 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register']
-    if request.endpoint not in allowed_routes and 'email' not in session:
+    allowed_routes = ['login', 'home', 'allposts', 'newuser', 'index', 'usersposts', 'singlepost','usersignup']
+    if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
+
+@app.route('/')
+def index():
+    return redirect('/home')
+
+@app.route('/home')
+def home():
+    users = User.query.all()
+    return render_template('home.html', users=users)
+
+
+
+@app.route('/singlepost')
+def singlepost():
+
+    #users = User.query.all()
+    postid = request.args.get('postid')
+    post = Post.query.get(postid)
+    return render_template('singlepost.html', post=post)#, users=users)
+
+
+
+@app.route('/all_posts', methods=['POST', 'GET'])
+def all_posts():
+
+    posts = Post.query.all()
+    #user = User.query.all()
+    return render_template('allposts.html', posts=posts)#, user=user)
+
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+   
     if request.method == 'POST':
         error = 0
         username = request.form['username']
@@ -40,12 +71,15 @@ def login():
         usererror = ''
         passerror = ''
         user = User.query.filter_by(username=username).first()
+
         if not user:
             error = error + 1
-            user_error = 'User does not exsist'
+            usererror = 'User does not exsist'
+
         elif user.password != password:
             error = error + 1
-            pass_error = 'Invalid Password'
+            passerror = 'Invalid Password'
+
         if error == 0:
             if user and user.password == password:
                 session['username'] = username
@@ -56,82 +90,80 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/register', methods=['POST', 'GET'])
-def register():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        verify = request.form['verify']
-        existinguser = User.query.filter_by(email=email).first()
-        if not existinguser:
-            newuser = User(email, password)
-            db.session.add(newuser)
-            db.session.commit()
-            session['email'] = email
-            return redirect('/')
-        else:
-            return '<h1>This user already exists</h1>'
-    return render_template('register.html')
+
 
 @app.route('/logout')
 def logout():
-    del session['email']
+
+    del session['username']
     return redirect('/')
-    
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    post_id = request.args.get('id')
-    title = 'Blogz'
-    posts = [] 
-    if post_id:
-        posts = Blog.query.filter_by(id=post_id).all()
-        title = Blog.title 
-        return render_template('post.html', title = title, posts = posts, id = id) 
-    return redirect('/blog') 
 
-@app.route('/blog', methods=['POST', 'GET'])
-def blog():
-    
-    posts = Blog.query.all()
-    return render_template('blog.html', posts = posts)
 
-@app.route('/newpost', methods=['POST', 'GET'])
-def newpost():
-    title_error = ''
-    text_error = ''
+
+@app.route('/new_post', methods=['POST', 'GET'])
+def new_post():
+
+    owner = User.query.filter_by(username=session['username']).first()
+
     if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
+        name = request.form['blog_name']
+        storys = request.form['add_blog']
 
-        if not title:
-            title_error = 'Please add a title to continue'
-            return render_template('newpost.html', title_error = title_error, text_error = text_error)
-        if not body:
-            text_error = 'Please add a message body to continue'
-            return render_template('newpost.html', title_error = title_error, text_error = text_error) 
-        new_post = Blog(title, body)
-        posts = [new_post]
-        title = new_post.title
-        body = new_post.body
-        db.session.add(new_post)
-        db.session.commit()
+        errorblogname = ''
+        errorblogstory = ''
+        error = 0
 
-        return render_template('post.html', title = title, body=body, posts = posts)
-    return render_template('newpost.html', title_error = title_error, text_error = text_error)
+        if len(name) == 0:
+            errorblogname = 'invalid title'
+            error = error + 1
+        else:
+            errorblogname = ''
+
+        if len(storys) == 0:
+            errorblogstory = 'invaled blog'
+            error = error + 1
+        else:
+            errorblogstory = ''
+
+        if error > 0:
+            return render_template('newpost.html', 
+            errorblogname=errorblogname, 
+            errorblogstory=errorblogstory, blogname=name, addblog=storys)
+
+        else:
+            newpost = Post(name, storys, owner)
+            db.session.add(newpost)
+            db.session.commit()
+            userid = request.args.get('userid')
+            print (userid)
+            return redirect('/usersposts?user_id=' + str(newpost.owner.id))
+
+    return render_template('newpost.html')
 
 
-@app.route('/signup', methods=['POST', 'GET'])
+
+@app.route('/users_posts')
+def users_posts():
+       
+    user_id = request.args.get('userid')
+    user = User.query.get(userid)
+    post = Post.query.filter_by(owner_id=user_d)
+    return render_template('usersposts.html', user=user, posts=post)  
+
+
+
+@app.route('/usersignup', methods=['POST', 'GET'])
 def new_user():    
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        conf_pass = request.form["confirm_pass"]
+        confpass = request.form["confurm_pass"]
 
-        old_user = ''
-        username_error = ''
-        password_error = ''
-        conf_pass_error = ''
+        olduser = ''
+        usernameerror = ''
+        passworderror = ''
+        confpasserror = ''
         error = 0
 
         if len(username) < 3 or len(username) > 20:
@@ -152,7 +184,7 @@ def new_user():
                 passworderror = 'Not a valid user name'
                 error = error + 1
 
-        if password != conf_pass:
+        if password != confpass:
             confpasserror = 'Does not match password'
             error = error + 1
 
@@ -164,14 +196,15 @@ def new_user():
                 db.session.commit()
                 return redirect('/login')
             else:
-                old_user = 'User already Registerd'
-                return render_template('signup.html', olduser=olduser, username=username)
+                olduser = 'User already Registerd'
+                return render_template('usersignup.html', olduser=olduser, username=username)
         else:
             return render_template('usersignup.html', username=username, 
             usernameerror=usernameerror, passworderror=passworderror, 
             confpasserror=confpasserror)
 
-    return render_template('signup.html')
+    return render_template('usersignup.html')
+
 
 if __name__ == '__main__':
     app.run()
