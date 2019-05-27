@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:build-a-blog@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:blogz@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 app.secret_key = "y337kGcys&zP3B"
@@ -37,22 +37,22 @@ def login():
         error = 0
         username = request.form['username']
         password = request.form['password']
-        user_error = ''
-        pass_error = ''
+        usererror = ''
+        passerror = ''
         user = User.query.filter_by(username=username).first()
         if not user:
             error = error + 1
             user_error = 'User does not exsist'
         elif user.password != password:
             error = error + 1
-            pass_error = 'Invaled Password'
+            pass_error = 'Invalid Password'
         if error == 0:
             if user and user.password == password:
                 session['username'] = username
                 flash("Logged in")
-                return redirect('/new_post')
+                return redirect('/newpost')
         else:
-            return render_template('login.html', user_error=user_error, pass_error=pass_error)
+            return render_template('login.html', usererror=usererror, passerror=passerror)
 
     return render_template('login.html')
 
@@ -62,10 +62,10 @@ def register():
         email = request.form['email']
         password = request.form['password']
         verify = request.form['verify']
-        existing_user = User.query.filter_by(email=email).first()
-        if not existing_user:
-            new_user = User(email, password)
-            db.session.add(new_user)
+        existinguser = User.query.filter_by(email=email).first()
+        if not existinguser:
+            newuser = User(email, password)
+            db.session.add(newuser)
             db.session.commit()
             session['email'] = email
             return redirect('/')
@@ -126,7 +126,7 @@ def new_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        conf_pass = request.form["confurm_pass"]
+        conf_pass = request.form["confirm_pass"]
 
         old_user = ''
         username_error = ''
@@ -135,41 +135,41 @@ def new_user():
         error = 0
 
         if len(username) < 3 or len(username) > 20:
-            username_error = 'Not a valid user name'
+            usernameerror = 'Not a valid user name'
             error = error + 1
 
         for char in username:
             if char == ' ':
-                username_error = 'Not a valid user name'
+                usernameerror = 'Not a valid user name'
                 error = error + 1
 
         if len(password) < 3 or len(password) > 20:
-            password_error = 'Not a valid password'
+            passworderror = 'Not a valid password'
             error = error + 1
 
         for char in password:
             if char == ' ':
-                password_error = 'Not a valid user name'
+                passworderror = 'Not a valid user name'
                 error = error + 1
 
         if password != conf_pass:
-            conf_pass_error = 'Does not match password'
+            confpasserror = 'Does not match password'
             error = error + 1
 
         if error == 0:
-            existing_user = User.query.filter_by(username=username).first()
-            if not existing_user:
-                new_user = User(username, password)
-                db.session.add(new_user)
+            existinguser = User.query.filter_by(username=username).first()
+            if not existinguser:
+                newuser = User(username, password)
+                db.session.add(newuser)
                 db.session.commit()
                 return redirect('/login')
             else:
                 old_user = 'User already Registerd'
-                return render_template('signup.html', old_user=old_user, username=username)
+                return render_template('signup.html', olduser=olduser, username=username)
         else:
-            return render_template('user_sighnup.html', username=username, 
-            username_error=username_error, password_error=password_error, 
-            conf_pass_error=conf_pass_error)
+            return render_template('usersignup.html', username=username, 
+            usernameerror=usernameerror, passworderror=passworderror, 
+            confpasserror=confpasserror)
 
     return render_template('signup.html')
 
