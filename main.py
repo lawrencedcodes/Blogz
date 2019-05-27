@@ -51,7 +51,7 @@ def singlepost():
     post = Blog.query.get(postid)
     return render_template('singlepost.html', post=post)
 
-@app.route('/all_posts', methods=['POST', 'GET'])
+@app.route('/allposts', methods=['POST', 'GET'])
 def allposts():
 
     posts = Blog.query.all()
@@ -113,7 +113,7 @@ def newpost():
             errorblogname = ''
 
         if len(storys) == 0:
-            errorblogstory = 'invaled blog'
+            errorblogstory = 'invalid blog'
             error = error + 1
         else:
             errorblogstory = ''
@@ -136,10 +136,10 @@ def newpost():
 
 
 @app.route('/usersposts')
-def usersposts():
+def usersposts():              
        
     userid = request.args.get('userid')
-    user = User.query.get(userid)
+    user = User.query.get('userid')
     post = Blog.query.filter_by(ownerid=userid)
     return render_template('usersposts.html', user=user, posts=post)  
 
