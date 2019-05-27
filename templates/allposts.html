@@ -9,9 +9,9 @@
     <ul>
         {% for post in posts %}
         <li>
-            <h2><a href='/singlepost?post_id={{post.id}}'>{{post.title}}</a></h2>
+            <h2><a href='/singlepost?postid={{post.id}}'>{{post.title}}</a></h2>
             <p>{{post.blog}}</p>
-            <p>writen by <a href='/usersposts?user_id={{post.owner.id}}'>{{post.owner.username}}</a></p>
+            <p>writen by <a href='/usersposts?userid={{post.owner.id}}'>{{post.owner.username}}</a></p>
         </li>
         <hr/>
 

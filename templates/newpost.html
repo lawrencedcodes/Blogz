@@ -3,29 +3,26 @@
 {% block content %}
 
 <h1>Create a New Blog Post</h1>
-
-<p></p>
-<p></p>
+<br/>
 
 <form method="post">
-<table>
-<tbody>
-    <tr>
-    <td>
-        <label>Blog Title</label>
-        <input name="blogname" type="text" value="{{blogname}}">
-        <span class="error">{{errorblogname}}</span>
-    </td>
-    </tr>
-    
-    <tr>
-    <td>
-        <label>Blog Body</label>
-        <input name="addblog" type="text" value="{{addblog}}">
-        <span class="error">{{errorblogstory}}</span>
-    </td>
-    </tr>
-    </tbody>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Blog Title</label>
+                    <input name="blogname" type="text" value="{{blogname}}">
+                    <span class="error">{{errorblogname}}</span>
+                </td>
+            </tr>   
+            <tr>
+                <td>
+                    <label>Blog Body</label>
+                    <input name="addblog" type="text" value="{{addblog}}">
+                    <span class="error">{{errorblogstory}}</span>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <input type="submit" value="Add Entry">

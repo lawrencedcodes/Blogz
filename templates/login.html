@@ -4,25 +4,25 @@
 <h1>Login</h1>
 
 <form action="/login" method="post">
-<table>
-<tbody>
-    <tr>
-    <td>
-        <label for="username">username</label>
-        <input name="username" type="text" value="{{username}}">
-        <span class="error">{{usererror}}</span>
-    </td>
-    </tr>
+    <table>
+        <tbody>
+            <tr>
+            <td>
+                <label for="username">username</label>
+                <input name="username" type="text" value="{{username}}">
+                <span class="error">{{usererror}}</span>
+            </td>
+            </tr>
 
-    <tr>
-    <td>
-        <label for="password">Password</label>
-        <input name="password" type="password">
-        <span class="error">{{passerror}}</span>
-    </td>
-    </tr>
-</tbody>
-</table>
+            <tr>
+            <td>
+                <label for="password">Password</label>
+                <input name="password" type="password">
+                <span class="error">{{passerror}}</span>
+            </td>
+            </tr>
+        </tbody>
+    </table>
 
     <div>
     <input type="submit" value="Login">
@@ -32,6 +32,5 @@
     </div>
 </form>
 
-<p></p>
-<a href='/usersignup'>Signup</a>
+<a href="/usersignup">Signup</a>
 {% endblock %}

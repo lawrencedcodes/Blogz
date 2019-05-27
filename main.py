@@ -40,8 +40,6 @@ def home():
     users = User.query.all()
     return render_template('home.html', users=users)
 
-
-
 @app.route('/singlepost')
 def singlepost():
 
@@ -49,8 +47,6 @@ def singlepost():
     postid = request.args.get('postid')
     post = Post.query.get(postid)
     return render_template('singlepost.html', post=post)#, users=users)
-
-
 
 @app.route('/all_posts', methods=['POST', 'GET'])
 def all_posts():
