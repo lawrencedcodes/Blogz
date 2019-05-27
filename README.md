@@ -12,7 +12,7 @@ Testing has not been built into the project yet. *todo*
 Python Flask SqlAlchemy
 
 ### Contributing
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests to us.
+Pull request? Just ask!
 
 ### Authors
 Lawrence Lockhart
