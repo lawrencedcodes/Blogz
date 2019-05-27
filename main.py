@@ -19,10 +19,10 @@ class Blog(db.Model):
     
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(120), unique=True)
+    username = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
     def __init__(self, email, password):
-        self.email = email
+        self.username = username
         self.password = password
 
 @app.before_request
