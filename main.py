@@ -147,7 +147,7 @@ def users_posts():
        
     user_id = request.args.get('userid')
     user = User.query.get(userid)
-    post = Post.query.filter_by(owner_id=user_d)
+    post = Post.query.filter_by(ownerid=userid)
     return render_template('usersposts.html', user=user, posts=post)  
 
 
@@ -158,7 +158,7 @@ def new_user():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        confpass = request.form["confurm_pass"]
+        confpass = request.form["confirm_pass"]
 
         olduser = ''
         usernameerror = ''
@@ -196,7 +196,7 @@ def new_user():
                 db.session.commit()
                 return redirect('/login')
             else:
-                olduser = 'User already Registerd'
+                olduser = 'User already Registered'
                 return render_template('usersignup.html', olduser=olduser, username=username)
         else:
             return render_template('usersignup.html', username=username, 
