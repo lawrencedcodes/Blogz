@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, request
+from flask import Flask, render_template, redirect, session, request, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
-    def __init__(self, email, password):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
 
@@ -96,14 +96,14 @@ def logout():
 
 
 
-@app.route('/new_post', methods=['POST', 'GET'])
+@app.route('/newpost', methods=['POST', 'GET'])
 def newpost():
 
     owner = User.query.filter_by(username=session['username']).first()
 
     if request.method == 'POST':
-        name = request.form['blog_name']
-        storys = request.form['add_blog']
+        name = request.form['blogname']
+        storys = request.form['addblog']
 
         errorblogname = ''
         errorblogstory = ''
